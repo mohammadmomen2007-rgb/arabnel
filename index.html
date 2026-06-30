@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEL Arab League Quiz</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#204a8a,#080b12 60%,#000);
+  color:#fff;
+  overflow:hidden
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  background:
+    radial-gradient(circle,#1e90ff44 0,transparent 30%),
+    radial-gradient(circle,#ff222233 0,transparent 30%);
+  animation:g 12s alternate infinite;
+  z-index:-1
+}
+
+@keyframes g{
+  to{transform:translate(10%,10%)}
+}
+
+.card{
+  width:min(760px,92%);
+  background:#ffffff12;
+  border:1px solid #ffffff22;
+  border-radius:20px;
+  backdrop-filter:blur(10px);
+  padding:40px;
+  text-align:center;
+  box-shadow:0 0 40px #0008
+}
+
+h1{font-size:52px;text-shadow:0 0 15px #3af}
+h2{font-weight:400}
+
+button{
+  width:100%;
+  padding:18px;
+  margin:12px 0;
+  border:none;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s
+}
+
+button:hover{transform:scale(1.02)}
+
+.red{
+  background:linear-gradient(#c11,#700);
+  color:#fff
+}
+
+.blue{
+  background:linear-gradient(#1af,#04c);
+  color:#fff
+}
+
+#start{
+  width:240px;
+  background:#fff;
+  color:#000;
+  display:none;
+  margin:30px auto 0
+}
+
+.bar{
+  height:10px;
+  background:#333;
+  border-radius:9px;
+  overflow:hidden
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#1af,#3fc)
+}
+
+/* 🔥 LOGO STYLING */
+.logo{
+  width:220px;
+  height:220px;
+  margin:20px auto;
+  background-image:url('9ec4b8e6-9a54-41b0-b10d-d34a1a895eba.png');
+  background-size:200% 100%;
+  background-repeat:no-repeat;
+  border-radius:12px;
+  box-shadow:0 0 20px #000a;
+  animation:fadeIn .6s ease;
+}
+
+.logo.red{ background-position:left center; }
+.logo.blue{ background-position:right center; }
+
+@keyframes fadeIn{
+  from{opacity:0; transform:scale(.9);}
+  to{opacity:1; transform:scale(1);}
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <div id="app"></div>
+</div>
+
+<script>
+const qs=[
+["What kind of scoring mentality do you have?","As long as we're in the lead, I don't care how many goals we scored.","Even if it's 10–0, I'll keep trying to score goals."],
+["Your teammate has a better chance to score.","Pass the ball. Winning comes first.","Create my own chance. I want the goal."],
+["What motivates you the most?","Being part of a champion team.","Becoming the world's best striker."],
+["After losing an important match...","Analyze what the team needs to improve.","Train until I'm unstoppable."],
+["A coach tells you to play more safely.","I'll follow the game plan.","I'll trust my instincts if I see a chance."],
+["Which quote fits you better?","Victory belongs to those who work together.","Goals belong to those with the courage to take them."],
+["In the final minute of a tied match...","Keep possession and avoid mistakes.","Take the decisive shot myself."]
+];
+
+let i=0,r=0,b=0;
+const app=document.getElementById("app");
+
+function intro(){
+  app.innerHTML='<h1 id=t></h1><h2>Welcome to the NEL Arab League.</h2><button id=start onclick="showQ()">Start Quiz</button>';
+  let s="Hello Egoist.";
+  let n=0;
+  let t=document.getElementById("t");
+  let iv=setInterval(()=>{
+    t.textContent+=s[n++]||"";
+    if(n>s.length){
+      clearInterval(iv);
+      start.style.display="block";
+    }
+  },80);
+}
+
+function showQ(){
+  let p=i/qs.length*100;
+  app.innerHTML=`
+    <h2>${i+1}. ${qs[i][0]}</h2>
+    <button class=red onclick="ans('r')">${qs[i][1]}</button>
+    <button class=blue onclick="ans('b')">${qs[i][2]}</button>
+    <p>Question ${i+1}/${qs.length}</p>
+    <div class=bar><div class=fill style="width:${p}%"></div></div>
+  `;
+}
+
+function ans(t){
+  t=="r"?r++:b++;
+  i++;
+  if(i<qs.length) showQ();
+  else res();
+}
+
+function res(){
+  let isBlue = b > r;
+  let team = isBlue ? "BAUCH YOUTH FC" : "ATASSA FC";
+  let color = isBlue ? "#4af" : "#f55";
+  let desc = isBlue
+    ? "Your ego pushes you to become the world's greatest striker."
+    : "You value discipline, teamwork, and winning above all.";
+
+  let logoClass = isBlue ? "logo blue" : "logo red";
+
+  app.innerHTML=`
+    <div class="${logoClass}"></div>
+    <h1 style="color:${color}">${team}</h1>
+    <h2>You have been selected for ${team}.</h2>
+    <p>${desc}</p>
+    <h3>Red: ${r} | Blue: ${b}</h3>
+    <button id=start style="display:block" onclick="location.reload()">Restart Quiz</button>
+  `;
+}
+
+intro();
+</script>
+
+</body>
+</html>
